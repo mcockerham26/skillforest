@@ -1,3 +1,6 @@
+import 'package:skillforest/screens/signup_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -38,12 +41,17 @@ class _SplashScreenState extends State<SplashScreen>
 
     _controller.forward();
 
-    Timer(const Duration(seconds: 8), () {
+    Timer(const Duration(seconds: 8), () async {
+      final preferences = await SharedPreferences.getInstance();
+      final onboarded = preferences.getBool('skillforest_onboarded') ?? false;
+
       if (!mounted) return;
 
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (_) => DashboardScreen()),
+        MaterialPageRoute(
+          builder: (_) => onboarded ? DashboardScreen() : const SignupScreen(),
+        ),
       );
     });
   }
